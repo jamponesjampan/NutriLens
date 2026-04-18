@@ -2,6 +2,7 @@ export type UserGoal = 'lose_weight' | 'gain_muscle' | 'maintain' | 'eat_healthy
 export type DietType = 'omnivore' | 'vegetarian' | 'vegan' | 'keto' | 'mediterranean';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
 export type Restriction = 'gluten' | 'lactose' | 'diabetes' | 'hypertension' | 'none';
+export type ProfileType = 'self' | 'child' | 'elder';
 
 export interface UserProfile {
   name: string;
@@ -13,6 +14,7 @@ export interface UserProfile {
   activity: ActivityLevel;
   restrictions: Restriction[];
   dailyCalorieTarget: number;
+  profileType?: ProfileType;
   avatar?: string;
 }
 
@@ -67,116 +69,186 @@ export interface MealSuggestion {
   imageQuery: string;
 }
 
+export interface Challenge {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  icon: string;
+  color: string;
+  enrolled: boolean;
+  daysCompleted: number;
+  totalDays: number;
+}
+
+export const DAILY_TIPS = [
+  'Sabias que comer uma laranja depois do almoço ajuda o corpo a absorver o ferro do feijão? Combate a anemia!',
+  'O funge de milho é rico em energia! Combina muito bem com vegetais verdes para equilibrar os nutrientes.',
+  'Beber água antes das refeições ajuda a controlar as porções e melhora a digestão. Tenta beber 2L por dia!',
+  'O peixe fresco é uma das melhores fontes de proteína e ómega-3. O Mufete é uma refeição quase perfeita!',
+  'As folhas de mandioca (saka-saka) são riquíssimas em ferro e cálcio. Um superfood angolano!',
+  'Comer devagar e mastigar bem os alimentos melhora a digestão e dá sensação de saciedade mais cedo.',
+  'O amendoim é rico em gorduras saudáveis e proteínas. Um punhado por dia faz bem ao coração!',
+];
+
+export const MOCK_CHALLENGES: Challenge[] = [
+  {
+    id: 'c1',
+    title: '7 Dias Sem Açúcar',
+    description: 'Elimina açúcares adicionados durante uma semana. O teu corpo vai agradecer!',
+    duration: '7 dias',
+    icon: 'no-food',
+    color: '#EF4444',
+    enrolled: true,
+    daysCompleted: 3,
+    totalDays: 7,
+  },
+  {
+    id: 'c2',
+    title: 'Hidratação Total',
+    description: 'Bebe pelo menos 8 copos de água por dia durante 14 dias. Energia e pele renovada!',
+    duration: '14 dias',
+    icon: 'water-drop',
+    color: '#38BDF8',
+    enrolled: false,
+    daysCompleted: 0,
+    totalDays: 14,
+  },
+  {
+    id: 'c3',
+    title: 'Café da Manhã Campeão',
+    description: 'Toma um café da manhã completo (proteína + fruta + carboidrato) por 5 dias seguidos.',
+    duration: '5 dias',
+    icon: 'wb-sunny',
+    color: '#F59E0B',
+    enrolled: false,
+    daysCompleted: 0,
+    totalDays: 5,
+  },
+  {
+    id: 'c4',
+    title: '30 Dias de Legumes',
+    description: 'Inclui pelo menos uma porção de legumes em cada refeição principal durante 30 dias.',
+    duration: '30 dias',
+    icon: 'eco',
+    color: '#4ADE80',
+    enrolled: false,
+    daysCompleted: 0,
+    totalDays: 30,
+  },
+];
+
+// Angolan food images via Unsplash
 export const MOCK_ANALYSES: FoodAnalysis[] = [
   {
     id: '1',
-    imageUri: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800',
-    dish: 'Buddha Bowl Mediterrâneo',
-    cuisine: 'Mediterrânea',
-    ingredients: ['Quinoa', 'Grão-de-bico', 'Abacate', 'Tomate cereja', 'Pepino', 'Azeite', 'Limão'],
+    imageUri: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800', // grilled fish
+    dish: 'Mufete com Funge',
+    cuisine: 'Angolana',
+    ingredients: ['Peixe grelhado', 'Funge de milho', 'Feijão de óleo de palma', 'Banana da terra', 'Cebola', 'Alho'],
     nutrients: {
-      calories: 520, protein: 18, carbs: 62, fat: 22, fiber: 12,
-      sugar: 8, sodium: 380, iron: 4.2, calcium: 95, vitaminC: 28,
-      vitaminD: 0, vitaminB12: 0, potassium: 720, magnesium: 88,
+      calories: 620, protein: 42, carbs: 68, fat: 18, fiber: 8,
+      sugar: 5, sodium: 420, iron: 5.2, calcium: 110, vitaminC: 18,
+      vitaminD: 5.5, vitaminB12: 3.2, potassium: 820, magnesium: 96,
     },
     score: 91,
     scoreLabel: 'Excelente',
-    profileCompatibility: 'Muito compatível com seus objetivos',
+    profileCompatibility: 'Muito compatível com os teus objectivos',
     warnings: [],
-    benefits: ['Rico em fibras', 'Proteína vegetal completa', 'Gorduras saudáveis do abacate', 'Baixo índice glicêmico'],
-    recommendation: 'Prato ideal para o almoço. Excelente equilíbrio nutricional, rico em nutrientes essenciais.',
+    benefits: ['Rica em proteína de peixe', 'Ferro do feijão', 'Vitamina D', 'Energia sustentada do funge'],
+    recommendation: 'Prato tipicamente angolano com excelente equilíbrio nutricional. Ideal para o almoço!',
     timestamp: Date.now() - 86400000,
     meal: 'lunch',
   },
   {
     id: '2',
-    imageUri: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800',
-    dish: 'Panquecas de Aveia com Frutas',
-    cuisine: 'Internacional',
-    ingredients: ['Aveia', 'Ovos', 'Banana', 'Mirtilos', 'Mel', 'Canela'],
+    imageUri: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800', // rice and beans
+    dish: 'Arroz com Feijão e Frango',
+    cuisine: 'Angolana',
+    ingredients: ['Arroz', 'Feijão vermelho', 'Frango grelhado', 'Óleo de palma', 'Cebola', 'Alho', 'Tomate'],
     nutrients: {
-      calories: 380, protein: 14, carbs: 58, fat: 9, fiber: 7,
-      sugar: 22, sodium: 180, iron: 2.8, calcium: 120, vitaminC: 12,
-      vitaminD: 1.2, vitaminB12: 0.8, potassium: 480, magnesium: 62,
+      calories: 540, protein: 36, carbs: 72, fat: 12, fiber: 10,
+      sugar: 6, sodium: 380, iron: 6.8, calcium: 95, vitaminC: 22,
+      vitaminD: 1.2, vitaminB12: 1.8, potassium: 680, magnesium: 88,
     },
-    score: 82,
+    score: 85,
     scoreLabel: 'Muito bom',
-    profileCompatibility: 'Bom para o café da manhã',
-    warnings: ['Açúcar moderado'],
-    benefits: ['Energia sustentada', 'Antioxidantes dos mirtilos', 'Beta-glucana da aveia'],
-    recommendation: 'Excelente opção para o café da manhã. Fornece energia de longa duração.',
+    profileCompatibility: 'Bom para energia e combate à anemia',
+    warnings: ['Óleo de palma em moderação'],
+    benefits: ['Rico em ferro - combate à anemia', 'Proteína completa', 'Fibras do feijão'],
+    recommendation: 'Uma das melhores combinações da culinária angolana! O feijão com arroz forma uma proteína completa.',
     timestamp: Date.now() - 43200000,
-    meal: 'breakfast',
+    meal: 'lunch',
   },
 ];
 
 export const MOCK_MEAL_PLAN: MealPlan = {
   date: new Date().toISOString().split('T')[0],
   breakfast: {
-    name: 'Smoothie Bowl de Açaí',
-    description: 'Base de açaí com granola crocante, banana, morangos e mel',
-    estimatedCalories: 340,
-    prepTime: 10,
-    tags: ['Antioxidante', 'Energia', 'Vitaminas'],
-    imageQuery: 'acai bowl smoothie',
+    name: 'Papaia com Iogurte e Mel',
+    description: 'Fatias de papaia fresca com iogurte natural, mel e granola. Leve, nutritivo e energizante para começar o dia.',
+    estimatedCalories: 280,
+    prepTime: 5,
+    tags: ['Vitamina C', 'Probióticos', 'Energia'],
+    imageQuery: 'papaya yogurt breakfast',
   },
   lunch: {
-    name: 'Salada de Frango Grelhado',
-    description: 'Peito de frango, folhas verdes, quinoa, tomate e vinagrete',
-    estimatedCalories: 480,
-    prepTime: 20,
-    tags: ['Proteína', 'Low carb', 'Saciante'],
-    imageQuery: 'grilled chicken salad quinoa',
+    name: 'Mufete Completo',
+    description: 'Peixe grelhado (tilápia ou cacusso), funge de milho, feijão de óleo de palma e banana da terra. O prato mais nutritivo de Angola!',
+    estimatedCalories: 620,
+    prepTime: 35,
+    tags: ['Proteína', 'Ferro', 'Energia', 'Tradicional'],
+    imageQuery: 'grilled fish with beans rice',
   },
   dinner: {
-    name: 'Salmão ao Vapor com Legumes',
-    description: 'Salmão com brócolis, cenoura e batata-doce ao vapor',
-    estimatedCalories: 520,
-    prepTime: 25,
-    tags: ['Ômega-3', 'Proteína', 'Antioxidante'],
-    imageQuery: 'steamed salmon vegetables',
+    name: 'Calulu de Peixe com Arroz',
+    description: 'Guisado de peixe com quiabo, tomate, cebola e especiarias angolanas, acompanhado de arroz branco.',
+    estimatedCalories: 480,
+    prepTime: 30,
+    tags: ['Ómega-3', 'Antioxidante', 'Leveza'],
+    imageQuery: 'fish stew okra vegetables',
   },
   snack: {
-    name: 'Mix de Castanhas e Frutas Secas',
-    description: 'Castanha-do-pará, amêndoas, nozes e uva passa',
+    name: 'Amendoim Torrado com Fruta',
+    description: 'Um punhado de amendoim torrado sem sal com uma banana ou manga. Snack angolano perfeito!',
     estimatedCalories: 220,
     prepTime: 0,
-    tags: ['Gorduras boas', 'Energia', 'Zinco'],
-    imageQuery: 'mixed nuts dried fruits',
+    tags: ['Gorduras boas', 'Energia', 'Natural'],
+    imageQuery: 'roasted peanuts tropical fruit',
   },
 };
 
 export function generateAnalysis(imageUri: string, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack'): FoodAnalysis {
   const options = [
     {
-      dish: 'Filé de Tilápia com Arroz Integral',
-      cuisine: 'Brasileira',
-      ingredients: ['Tilápia', 'Arroz integral', 'Brócolis', 'Cenoura', 'Azeite', 'Limão', 'Alho'],
-      nutrients: { calories: 450, protein: 38, carbs: 48, fat: 11, fiber: 6, sugar: 4, sodium: 340, iron: 2.1, calcium: 88, vitaminC: 42, vitaminD: 4.5, vitaminB12: 2.8, potassium: 680, magnesium: 74 },
-      score: 88, scoreLabel: 'Muito bom',
-      benefits: ['Alta proteína magra', 'Ômega-3', 'Vitamina D', 'Baixo colesterol'],
+      dish: 'Calulu de Peixe com Quiabo',
+      cuisine: 'Angolana',
+      ingredients: ['Peixe seco', 'Quiabo', 'Tomate', 'Cebola', 'Óleo de palma', 'Folhas de mandioca', 'Alho'],
+      nutrients: { calories: 480, protein: 38, carbs: 32, fat: 16, fiber: 8, sugar: 4, sodium: 480, iron: 6.2, calcium: 120, vitaminC: 38, vitaminD: 4.0, vitaminB12: 2.8, potassium: 720, magnesium: 88 },
+      score: 90, scoreLabel: 'Excelente',
+      benefits: ['Muito rico em ferro - combate a anemia', 'Proteína completa do peixe', 'Fibras do quiabo', 'Vitaminas das folhas de mandioca'],
       warnings: [],
-      recommendation: 'Excelente refeição equilibrada. Proteína de alta qualidade com carboidratos complexos.',
+      recommendation: 'Excelente prato tradicional! As folhas de mandioca são um superfood rico em ferro e cálcio.',
     },
     {
-      dish: 'Wrap de Frango com Vegetais',
-      cuisine: 'Mexicana',
-      ingredients: ['Tortilla integral', 'Frango', 'Alface', 'Tomate', 'Queijo cottage', 'Pimentão'],
-      nutrients: { calories: 410, protein: 32, carbs: 42, fat: 14, fiber: 5, sugar: 6, sodium: 520, iron: 3.2, calcium: 145, vitaminC: 35, vitaminD: 0.5, vitaminB12: 1.2, potassium: 520, magnesium: 58 },
-      score: 78, scoreLabel: 'Bom',
-      benefits: ['Proteína completa', 'Vitamina C', 'Cálcio'],
-      warnings: ['Sódio moderado'],
-      recommendation: 'Boa opção para o almoço. Atenção ao sódio se tiver restrição cardiovascular.',
+      dish: 'Arroz com Feijão e Frango Grelhado',
+      cuisine: 'Angolana',
+      ingredients: ['Arroz branco', 'Feijão vermelho', 'Frango grelhado', 'Cebola', 'Tomate', 'Alho', 'Coentros'],
+      nutrients: { calories: 540, protein: 42, carbs: 65, fat: 10, fiber: 10, sugar: 5, sodium: 350, iron: 6.8, calcium: 85, vitaminC: 22, vitaminD: 0.8, vitaminB12: 1.6, potassium: 640, magnesium: 76 },
+      score: 86, scoreLabel: 'Muito bom',
+      benefits: ['Combinação perfeita de proteínas', 'Rico em ferro contra anemia', 'Fibras do feijão para digestão'],
+      warnings: [],
+      recommendation: 'Combinação clássica e muito nutritiva! Juntos, o feijão e o arroz formam uma proteína completa.',
     },
     {
-      dish: 'Omelete de Espinafre com Cogumelos',
-      cuisine: 'Internacional',
-      ingredients: ['Ovos', 'Espinafre', 'Cogumelos', 'Queijo feta', 'Azeite', 'Ervas'],
-      nutrients: { calories: 320, protein: 24, carbs: 8, fat: 21, fiber: 3, sugar: 3, sodium: 420, iron: 3.8, calcium: 180, vitaminC: 22, vitaminD: 2.1, vitaminB12: 1.9, potassium: 480, magnesium: 66 },
-      score: 85, scoreLabel: 'Muito bom',
-      benefits: ['Rica em ferro', 'Vitamina D', 'Low carb', 'Vitamina B12'],
+      dish: 'Mufete com Funge de Milho',
+      cuisine: 'Angolana',
+      ingredients: ['Peixe cacusso grelhado', 'Funge de milho', 'Feijão de azeite', 'Banana da terra cozida', 'Limão', 'Cebola'],
+      nutrients: { calories: 620, protein: 44, carbs: 70, fat: 18, fiber: 9, sugar: 6, sodium: 410, iron: 5.8, calcium: 105, vitaminC: 20, vitaminD: 5.8, vitaminB12: 3.4, potassium: 850, magnesium: 98 },
+      score: 93, scoreLabel: 'Excelente',
+      benefits: ['O prato mais nutritivo de Angola!', 'Vitamina D do peixe', 'Ferro do feijão combate anemia', 'Energia de longa duração do funge'],
       warnings: [],
-      recommendation: 'Excelente para o café da manhã ou jantar leve. Proteína completa e nutrientes essenciais.',
+      recommendation: 'O Mufete é considerado um dos pratos mais completos nutricionalmente! Perfeito para um almoço cheio de energia.',
     },
   ];
   const picked = options[Math.floor(Math.random() * options.length)];
@@ -188,7 +260,7 @@ export function generateAnalysis(imageUri: string, mealType: 'breakfast' | 'lunc
     nutrients: picked.nutrients,
     score: picked.score,
     scoreLabel: picked.scoreLabel,
-    profileCompatibility: 'Compatível com seu perfil',
+    profileCompatibility: 'Compatível com o teu perfil',
     warnings: picked.warnings,
     benefits: picked.benefits,
     recommendation: picked.recommendation,

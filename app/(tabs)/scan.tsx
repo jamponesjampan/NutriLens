@@ -12,15 +12,15 @@ import { Colors, Radius, FontSize, FontWeight } from '@/constants/theme';
 import { useApp } from '@/contexts/AppContext';
 import { generateAnalysis } from '@/constants/mockData';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
 
-const MEAL_TYPES: { key: MealType; label: string; icon: string; time: string }[] = [
-  { key: 'breakfast', label: 'Café da manhã', icon: 'wb-sunny', time: '7:00–10:00' },
-  { key: 'lunch', label: 'Almoço', icon: 'light-mode', time: '11:30–14:00' },
-  { key: 'dinner', label: 'Jantar', icon: 'nights-stay', time: '18:00–21:00' },
-  { key: 'snack', label: 'Lanche', icon: 'coffee', time: 'Qualquer hora' },
+const MEAL_TYPES: { key: MealType; label: string; icon: string; time: string; example: string }[] = [
+  { key: 'breakfast', label: 'Café da manhã', icon: 'wb-sunny', time: '7:00–10:00', example: 'Ex: Papaia, pão, ovos' },
+  { key: 'lunch', label: 'Almoço', icon: 'light-mode', time: '11:30–14:00', example: 'Ex: Mufete, arroz e feijão' },
+  { key: 'dinner', label: 'Jantar', icon: 'nights-stay', time: '18:00–21:00', example: 'Ex: Calulu, sopa' },
+  { key: 'snack', label: 'Lanche', icon: 'coffee', time: 'Qualquer hora', example: 'Ex: Amendoim, fruta' },
 ];
 
 export default function ScanScreen() {
@@ -81,7 +81,8 @@ export default function ScanScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Escanear refeição</Text>
+        <Text style={styles.headerTitle}>Analisar refeição</Text>
+        <Text style={styles.headerSubtitle}>Fotografa o teu prato para uma análise completa</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
@@ -102,7 +103,7 @@ export default function ScanScreen() {
                   </View>
                   <View style={styles.analyzingBadge}>
                     <ActivityIndicator color={Colors.primary} size="small" />
-                    <Text style={styles.analyzingText}>Analisando com IA...</Text>
+                    <Text style={styles.analyzingText}>A nossa equipa está a analisar...</Text>
                   </View>
                 </View>
               )}
@@ -114,20 +115,28 @@ export default function ScanScreen() {
             </View>
           ) : (
             <View style={styles.emptyImageArea}>
-              <View style={styles.cameraIconWrap}>
-                <MaterialIcons name="camera-alt" size={48} color={Colors.primary} />
-              </View>
-              <Text style={styles.emptyTitle}>Fotografe sua refeição</Text>
-              <Text style={styles.emptyDesc}>Tire uma foto ou escolha da galeria para análise nutricional instantânea</Text>
-              <View style={styles.imageActions}>
-                <TouchableOpacity style={styles.imageActionBtn} onPress={takePhoto}>
-                  <MaterialIcons name="camera-alt" size={22} color={Colors.primary} />
-                  <Text style={styles.imageActionLabel}>Câmera</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.imageActionBtn} onPress={pickFromGallery}>
-                  <MaterialIcons name="photo-library" size={22} color={Colors.accent} />
-                  <Text style={[styles.imageActionLabel, { color: Colors.accent }]}>Galeria</Text>
-                </TouchableOpacity>
+              <Image
+                source={{ uri: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400' }}
+                style={StyleSheet.absoluteFillObject}
+                contentFit="cover"
+              />
+              <View style={styles.emptyImageOverlay} />
+              <View style={styles.emptyImageContent}>
+                <View style={styles.cameraIconWrap}>
+                  <MaterialIcons name="camera-alt" size={36} color={Colors.primary} />
+                </View>
+                <Text style={styles.emptyTitle}>Fotografa o teu prato</Text>
+                <Text style={styles.emptyDesc}>Aponta a câmara para a refeição e recebe a análise nutricional completa em segundos</Text>
+                <View style={styles.imageActions}>
+                  <TouchableOpacity style={styles.imageActionBtn} onPress={takePhoto}>
+                    <MaterialIcons name="camera-alt" size={20} color={Colors.primary} />
+                    <Text style={styles.imageActionLabel}>Câmara</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.imageActionBtn, { borderColor: Colors.accent }]} onPress={pickFromGallery}>
+                    <MaterialIcons name="photo-library" size={20} color={Colors.accent} />
+                    <Text style={[styles.imageActionLabel, { color: Colors.accent }]}>Galeria</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           )}
@@ -146,6 +155,7 @@ export default function ScanScreen() {
                 <MaterialIcons name={m.icon as any} size={20} color={mealType === m.key ? Colors.primary : Colors.textSecondary} />
                 <Text style={[styles.mealTypeBtnLabel, mealType === m.key && { color: Colors.primary }]}>{m.label}</Text>
                 <Text style={styles.mealTypeBtnTime}>{m.time}</Text>
+                <Text style={styles.mealTypeBtnExample}>{m.example}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -153,11 +163,12 @@ export default function ScanScreen() {
 
         {/* Quick tips */}
         <View style={styles.tipsCard}>
-          <Text style={styles.tipsTitle}>Dicas para melhor análise</Text>
+          <Text style={styles.tipsTitle}>Como obter a melhor análise</Text>
           {[
-            { icon: 'wb-sunny', tip: 'Boa iluminação melhora a precisão' },
-            { icon: 'crop-free', tip: 'Enquadre todo o prato na foto' },
-            { icon: 'visibility', tip: 'Evite sombras ou reflexos' },
+            { icon: 'wb-sunny', tip: 'Boa iluminação melhora muito a precisão' },
+            { icon: 'crop-free', tip: 'Enquadra todo o prato na foto' },
+            { icon: 'visibility', tip: 'Evita sombras ou reflexos' },
+            { icon: 'restaurant', tip: 'Funciona com pratos angolanos e internacionais' },
           ].map((t, i) => (
             <View key={i} style={styles.tipRow}>
               <MaterialIcons name={t.icon as any} size={16} color={Colors.primary} />
@@ -169,8 +180,8 @@ export default function ScanScreen() {
         {/* Analyze Button */}
         {selectedImage && !isAnalyzing && (
           <TouchableOpacity style={styles.analyzeBtn} onPress={analyzeImage} activeOpacity={0.85}>
-            <MaterialIcons name="biotech" size={22} color={Colors.textInverse} />
-            <Text style={styles.analyzeBtnText}>Analisar com IA</Text>
+            <MaterialIcons name="search" size={22} color={Colors.textInverse} />
+            <Text style={styles.analyzeBtnText}>Consultar Análise da Nossa Equipa</Text>
           </TouchableOpacity>
         )}
 
@@ -178,11 +189,11 @@ export default function ScanScreen() {
           <View style={styles.altActions}>
             <TouchableOpacity style={styles.altBtn} onPress={takePhoto}>
               <MaterialIcons name="camera-alt" size={22} color={Colors.textInverse} />
-              <Text style={styles.altBtnText}>Abrir câmera</Text>
+              <Text style={styles.altBtnText}>Abrir câmara</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.altBtn, styles.altBtnSecondary]} onPress={pickFromGallery}>
               <MaterialIcons name="photo-library" size={22} color={Colors.primary} />
-              <Text style={[styles.altBtnText, { color: Colors.primary }]}>Escolher foto</Text>
+              <Text style={[styles.altBtnText, { color: Colors.primary }]}>Identificar Produto Rapidamente</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -195,6 +206,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
   header: { paddingHorizontal: 20, paddingVertical: 16 },
   headerTitle: { fontSize: FontSize.xxl, fontWeight: FontWeight.bold, color: Colors.textPrimary },
+  headerSubtitle: { fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 4 },
   imageArea: { marginHorizontal: 20, marginBottom: 24 },
   imagePreviewWrap: { width: '100%', height: 260, borderRadius: Radius.xl, overflow: 'hidden', position: 'relative' },
   imagePreview: { width: '100%', height: 260 },
@@ -215,21 +227,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.6)', alignItems: 'center', justifyContent: 'center',
   },
   emptyImageArea: {
-    height: 260, backgroundColor: Colors.surface, borderRadius: Radius.xl,
-    alignItems: 'center', justifyContent: 'center', borderWidth: 1,
-    borderColor: Colors.surfaceBorder, borderStyle: 'dashed', padding: 24,
+    width: '100%', height: 270, borderRadius: Radius.xl, overflow: 'hidden',
+    borderWidth: 1, borderColor: Colors.surfaceBorder,
+  },
+  emptyImageOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(13,17,23,0.72)' },
+  emptyImageContent: {
+    flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24,
   },
   cameraIconWrap: {
-    width: 80, height: 80, borderRadius: 40,
-    backgroundColor: Colors.primaryMuted, alignItems: 'center', justifyContent: 'center', marginBottom: 16,
+    width: 70, height: 70, borderRadius: 35,
+    backgroundColor: Colors.primaryMuted, alignItems: 'center', justifyContent: 'center', marginBottom: 14,
+    borderWidth: 2, borderColor: Colors.primary,
   },
-  emptyTitle: { fontSize: FontSize.lg, fontWeight: FontWeight.semibold, color: Colors.textPrimary, marginBottom: 8 },
-  emptyDesc: { fontSize: FontSize.sm, color: Colors.textSecondary, textAlign: 'center', lineHeight: 20, marginBottom: 24 },
-  imageActions: { flexDirection: 'row', gap: 16 },
+  emptyTitle: { fontSize: FontSize.lg, fontWeight: FontWeight.semibold, color: Colors.textPrimary, marginBottom: 6, textAlign: 'center' },
+  emptyDesc: { fontSize: FontSize.sm, color: 'rgba(255,255,255,0.65)', textAlign: 'center', lineHeight: 20, marginBottom: 22 },
+  imageActions: { flexDirection: 'row', gap: 14 },
   imageActionBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: Colors.surfaceElevated, borderRadius: Radius.full,
-    paddingHorizontal: 18, paddingVertical: 10, borderWidth: 1, borderColor: Colors.surfaceBorder,
+    backgroundColor: 'rgba(13,17,23,0.7)', borderRadius: Radius.full,
+    paddingHorizontal: 18, paddingVertical: 10, borderWidth: 1.5, borderColor: Colors.primary,
   },
   imageActionLabel: { fontSize: FontSize.sm, fontWeight: FontWeight.semibold, color: Colors.primary },
   section: { paddingHorizontal: 20, marginBottom: 20 },
@@ -237,11 +253,12 @@ const styles = StyleSheet.create({
   mealTypeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   mealTypeBtn: {
     width: (width - 50) / 2, backgroundColor: Colors.surface, borderRadius: Radius.lg,
-    padding: 14, alignItems: 'flex-start', borderWidth: 1, borderColor: Colors.surfaceBorder, gap: 4,
+    padding: 14, alignItems: 'flex-start', borderWidth: 1, borderColor: Colors.surfaceBorder, gap: 3,
   },
   mealTypeBtnSelected: { borderColor: Colors.primary, backgroundColor: Colors.primaryMuted },
   mealTypeBtnLabel: { fontSize: FontSize.sm, fontWeight: FontWeight.semibold, color: Colors.textPrimary },
   mealTypeBtnTime: { fontSize: FontSize.xs, color: Colors.textMuted },
+  mealTypeBtnExample: { fontSize: FontSize.xs, color: Colors.textSecondary, fontStyle: 'italic' },
   tipsCard: {
     marginHorizontal: 20, backgroundColor: Colors.surface, borderRadius: Radius.lg,
     padding: 16, marginBottom: 20, borderWidth: 1, borderColor: Colors.surfaceBorder, gap: 10,
@@ -253,7 +270,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20, backgroundColor: Colors.primary, borderRadius: Radius.full,
     paddingVertical: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
   },
-  analyzeBtnText: { fontSize: FontSize.lg, fontWeight: FontWeight.bold, color: Colors.textInverse },
+  analyzeBtnText: { fontSize: FontSize.base, fontWeight: FontWeight.bold, color: Colors.textInverse },
   altActions: { paddingHorizontal: 20, gap: 12 },
   altBtn: {
     backgroundColor: Colors.primary, borderRadius: Radius.full,

@@ -44,7 +44,7 @@ export default function HistoryScreen() {
       activeOpacity={0.85}
       onPress={() => router.push({ pathname: '/analysis', params: { id: item.id } })}
     >
-      <Image source={{ uri: item.imageUri }} style={styles.cardImage} contentFit="cover" />
+      <Image source={{ uri: item.imageUri }} style={styles.cardImage} contentFit="cover" transition={200} />
       <View style={styles.cardBody}>
         <View style={styles.cardTop}>
           <View style={[styles.scorePill, {
@@ -61,7 +61,7 @@ export default function HistoryScreen() {
         <View style={styles.cardNutrients}>
           <NutrientChip icon="local-fire-department" value={`${item.nutrients.calories}`} unit="kcal" color={Colors.danger} />
           <NutrientChip icon="fitness-center" value={`${item.nutrients.protein}g`} unit="prot" color={Colors.protein} />
-          <NutrientChip icon="grain" value={`${item.nutrients.carbs}g`} unit="carbs" color={Colors.carbs} />
+          <NutrientChip icon="bolt" value={`${item.nutrients.iron}mg`} unit="ferro" color={Colors.accent} />
         </View>
         <Text style={styles.timestamp}>{new Date(item.timestamp).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</Text>
       </View>
@@ -73,25 +73,34 @@ export default function HistoryScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Histórico</Text>
+        <Text style={styles.headerSub}>O teu registo nutricional</Text>
       </View>
 
       {/* Summary Stats */}
       <View style={styles.statsRow}>
         <View style={styles.statBox}>
-          <MaterialIcons name="local-fire-department" size={20} color={Colors.danger} />
+          <Text style={styles.statEmoji}>🔥</Text>
           <Text style={styles.statValue}>{currentStreak}</Text>
-          <Text style={styles.statLabel}>dias seguidos</Text>
+          <Text style={styles.statLabel}>dias{'\n'}seguidos</Text>
         </View>
         <View style={[styles.statBox, styles.statBoxMain]}>
-          <MaterialIcons name="camera-alt" size={20} color={Colors.primary} />
+          <Text style={styles.statEmoji}>🍽️</Text>
           <Text style={styles.statValue}>{totalScanned}</Text>
-          <Text style={styles.statLabel}>refeições</Text>
+          <Text style={styles.statLabel}>refeições{'\n'}analisadas</Text>
         </View>
         <View style={styles.statBox}>
-          <MaterialIcons name="star" size={20} color={Colors.accent} />
+          <Text style={styles.statEmoji}>⭐</Text>
           <Text style={styles.statValue}>{avgScore}</Text>
-          <Text style={styles.statLabel}>score médio</Text>
+          <Text style={styles.statLabel}>score{'\n'}médio</Text>
         </View>
+      </View>
+
+      {/* Iron highlight */}
+      <View style={styles.ironBanner}>
+        <MaterialIcons name="bolt" size={20} color={Colors.accent} />
+        <Text style={styles.ironBannerText}>
+          Ferro acumulado esta semana: <Text style={{ color: Colors.accent, fontWeight: FontWeight.bold }}>~28mg</Text> — Excelente para combater a anemia!
+        </Text>
       </View>
 
       {/* Filter Bar */}
@@ -119,7 +128,7 @@ export default function HistoryScreen() {
           <View style={styles.empty}>
             <MaterialIcons name="restaurant" size={48} color={Colors.textMuted} />
             <Text style={styles.emptyText}>Nenhuma refeição encontrada</Text>
-            <Text style={styles.emptySubtext}>Escaneie um prato para começar</Text>
+            <Text style={styles.emptySubtext}>Fotografa um prato para começar</Text>
           </View>
         }
       />
@@ -139,17 +148,26 @@ function NutrientChip({ icon, value, unit, color }: any) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  header: { paddingHorizontal: 20, paddingVertical: 16 },
+  header: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 8 },
   headerTitle: { fontSize: FontSize.xxl, fontWeight: FontWeight.bold, color: Colors.textPrimary },
-  statsRow: { flexDirection: 'row', marginHorizontal: 20, marginBottom: 16, gap: 10 },
+  headerSub: { fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 3 },
+  statsRow: { flexDirection: 'row', marginHorizontal: 20, marginBottom: 12, gap: 10 },
   statBox: {
     flex: 1, backgroundColor: Colors.surface, borderRadius: Radius.lg,
-    padding: 14, alignItems: 'center', gap: 4, borderWidth: 1, borderColor: Colors.surfaceBorder,
+    padding: 14, alignItems: 'center', gap: 3, borderWidth: 1, borderColor: Colors.surfaceBorder,
   },
   statBoxMain: { backgroundColor: Colors.primaryMuted, borderColor: Colors.primary },
+  statEmoji: { fontSize: 20 },
   statValue: { fontSize: FontSize.xl, fontWeight: FontWeight.bold, color: Colors.textPrimary },
   statLabel: { fontSize: FontSize.xs, color: Colors.textSecondary, textAlign: 'center' },
-  filterRow: { flexDirection: 'row', paddingHorizontal: 20, gap: 8, marginBottom: 16 },
+  ironBanner: {
+    flexDirection: 'row', alignItems: 'center', gap: 8,
+    marginHorizontal: 20, marginBottom: 12,
+    backgroundColor: Colors.accentMuted, borderRadius: Radius.lg,
+    padding: 12, borderWidth: 1, borderColor: Colors.accent + '44',
+  },
+  ironBannerText: { flex: 1, fontSize: FontSize.xs, color: Colors.textSecondary, lineHeight: 18 },
+  filterRow: { flexDirection: 'row', paddingHorizontal: 20, gap: 8, marginBottom: 14 },
   filterChip: {
     paddingHorizontal: 14, paddingVertical: 7, borderRadius: Radius.full,
     backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.surfaceBorder,
@@ -161,7 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', backgroundColor: Colors.surface, borderRadius: Radius.xl,
     overflow: 'hidden', borderWidth: 1, borderColor: Colors.surfaceBorder, paddingRight: 12,
   },
-  cardImage: { width: 88, height: 110 },
+  cardImage: { width: 90, height: 115 },
   cardBody: { flex: 1, padding: 12, gap: 4 },
   cardTop: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   scorePill: { borderRadius: Radius.full, paddingHorizontal: 8, paddingVertical: 3 },

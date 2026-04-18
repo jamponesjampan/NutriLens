@@ -12,10 +12,10 @@ import { MOCK_MEAL_PLAN, MealSuggestion } from '@/constants/mockData';
 const { width } = Dimensions.get('window');
 
 const MEAL_IMAGES: Record<string, string> = {
-  breakfast: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=600',
-  lunch: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600',
-  dinner: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600',
-  snack: 'https://images.unsplash.com/photo-1543362906-acfc16c67564?w=600',
+  breakfast: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600',
+  lunch: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600',
+  dinner: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600',
+  snack: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600',
 };
 
 const MEAL_META = {
@@ -38,7 +38,7 @@ export default function PlanScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useApp();
   const [selectedDay, setSelectedDay] = useState<DayKey>('today');
-  const [expandedMeal, setExpandedMeal] = useState<string | null>('breakfast');
+  const [expandedMeal, setExpandedMeal] = useState<string | null>('lunch');
 
   const plan = MOCK_MEAL_PLAN;
   const totalCals = plan.breakfast.estimatedCalories + plan.lunch.estimatedCalories + plan.dinner.estimatedCalories + plan.snack.estimatedCalories;
@@ -46,7 +46,7 @@ export default function PlanScreen() {
 
   const goalText: Record<string, string> = {
     lose_weight: 'Déficit calórico', gain_muscle: 'Superávit calórico',
-    maintain: 'Manutenção', eat_healthy: 'Equilíbrio', manage_condition: 'Controle',
+    maintain: 'Manutenção', eat_healthy: 'Alimentação equilibrada', manage_condition: 'Controlo de saúde',
   };
 
   return (
@@ -59,6 +59,7 @@ export default function PlanScreen() {
           </View>
           <TouchableOpacity style={styles.regenerateBtn}>
             <MaterialIcons name="refresh" size={20} color={Colors.primary} />
+            <Text style={styles.regenerateBtnText}>Receber{'\n'}Plano</Text>
           </TouchableOpacity>
         </View>
 
@@ -78,17 +79,17 @@ export default function PlanScreen() {
         {/* Calorie Summary */}
         <View style={styles.calSummary}>
           <View style={styles.calRow}>
-            <View>
+            <View style={{ flex: 1, alignItems: 'center' }}>
               <Text style={styles.calValue}>{totalCals}</Text>
               <Text style={styles.calLabel}>kcal no plano</Text>
             </View>
             <View style={styles.calDivider} />
-            <View>
+            <View style={{ flex: 1, alignItems: 'center' }}>
               <Text style={styles.calValue}>{target}</Text>
-              <Text style={styles.calLabel}>kcal objetivo</Text>
+              <Text style={styles.calLabel}>kcal objectivo</Text>
             </View>
             <View style={styles.calDivider} />
-            <View>
+            <View style={{ flex: 1, alignItems: 'center' }}>
               <Text style={[styles.calValue, { color: totalCals > target ? Colors.danger : Colors.primary }]}>
                 {totalCals > target ? '+' : ''}{totalCals - target}
               </Text>
@@ -136,7 +137,9 @@ export default function PlanScreen() {
                     source={{ uri: MEAL_IMAGES[key] }}
                     style={styles.mealImage}
                     contentFit="cover"
+                    transition={300}
                   />
+                  <View style={styles.mealBodyOverlay} />
                   <View style={styles.mealBodyContent}>
                     <Text style={styles.mealName}>{meal.name}</Text>
                     <Text style={styles.mealDesc}>{meal.description}</Text>
@@ -151,7 +154,7 @@ export default function PlanScreen() {
                       {meal.prepTime > 0 && (
                         <View style={styles.mealMeta}>
                           <MaterialIcons name="schedule" size={14} color={Colors.textSecondary} />
-                          <Text style={styles.mealMetaText}>{meal.prepTime} min</Text>
+                          <Text style={styles.mealMetaText}>{meal.prepTime} min preparo</Text>
                         </View>
                       )}
                       <TouchableOpacity style={styles.addBtn}>
@@ -166,14 +169,24 @@ export default function PlanScreen() {
           );
         })}
 
+        {/* Personalised Plan CTA */}
+        <TouchableOpacity style={styles.planCTA} activeOpacity={0.85}>
+          <MaterialIcons name="event-note" size={24} color={Colors.textInverse} />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.planCTATitle}>Receber Plano Personalizado</Text>
+            <Text style={styles.planCTADesc}>Plano semanal adaptado ao teu perfil e objectivos</Text>
+          </View>
+          <MaterialIcons name="arrow-forward-ios" size={16} color={Colors.textInverse} />
+        </TouchableOpacity>
+
         {/* Nutrition Tips */}
         <View style={styles.tipsCard}>
           <View style={styles.tipsHeader}>
             <MaterialIcons name="lightbulb" size={18} color={Colors.accent} />
-            <Text style={styles.tipsTitle}>Dica do dia</Text>
+            <Text style={styles.tipsTitle}>Dica nutricional</Text>
           </View>
           <Text style={styles.tipText}>
-            Beba pelo menos 2L de água ao longo do dia. A hidratação adequada melhora o metabolismo e reduz a sensação de fome.
+            O Mufete angolano é considerado um dos pratos mais completos nutricionalmente! Rico em proteína do peixe, ferro do feijão e energia do funge — perfeito para um almoço de alta performance.
           </Text>
         </View>
       </ScrollView>
@@ -187,9 +200,11 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: FontSize.xxl, fontWeight: FontWeight.bold, color: Colors.textPrimary },
   headerSubtitle: { fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 4 },
   regenerateBtn: {
-    width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.primaryMuted,
-    alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: Colors.primary,
+    alignItems: 'center', backgroundColor: Colors.primaryMuted,
+    borderRadius: Radius.lg, paddingHorizontal: 12, paddingVertical: 8,
+    borderWidth: 1, borderColor: Colors.primary, gap: 4,
   },
+  regenerateBtnText: { fontSize: 10, fontWeight: FontWeight.bold, color: Colors.primary, textAlign: 'center' },
   daySelector: { flexDirection: 'row', marginHorizontal: 20, marginBottom: 16, backgroundColor: Colors.surface, borderRadius: Radius.lg, padding: 4 },
   dayBtn: { flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: Radius.md },
   dayBtnActive: { backgroundColor: Colors.primary },
@@ -202,7 +217,7 @@ const styles = StyleSheet.create({
   calRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
   calValue: { fontSize: FontSize.xl, fontWeight: FontWeight.extrabold, color: Colors.textPrimary, textAlign: 'center' },
   calLabel: { fontSize: FontSize.xs, color: Colors.textSecondary, textAlign: 'center', marginTop: 2 },
-  calDivider: { width: 1, height: 40, backgroundColor: Colors.surfaceBorder, flex: 0, marginHorizontal: 16 },
+  calDivider: { width: 1, height: 40, backgroundColor: Colors.surfaceBorder, marginHorizontal: 8 },
   calBar: { height: 6, backgroundColor: Colors.surfaceBorder, borderRadius: 3, overflow: 'hidden' },
   calBarFill: { height: 6, borderRadius: 3 },
   mealSection: { marginHorizontal: 20, marginBottom: 10 },
@@ -220,7 +235,8 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: Radius.lg, overflow: 'hidden', borderWidth: 1,
     borderTopWidth: 0, borderColor: Colors.surfaceBorder,
   },
-  mealImage: { width: '100%', height: 160 },
+  mealImage: { width: '100%', height: 180 },
+  mealBodyOverlay: { position: 'absolute', top: 0, left: 0, right: 0, height: 180, backgroundColor: 'rgba(0,0,0,0.2)' },
   mealBodyContent: { padding: 16 },
   mealName: { fontSize: FontSize.lg, fontWeight: FontWeight.bold, color: Colors.textPrimary, marginBottom: 6 },
   mealDesc: { fontSize: FontSize.sm, color: Colors.textSecondary, lineHeight: 20, marginBottom: 12 },
@@ -235,8 +251,14 @@ const styles = StyleSheet.create({
     borderRadius: Radius.full, paddingVertical: 8, paddingHorizontal: 14,
   },
   addBtnText: { fontSize: FontSize.sm, fontWeight: FontWeight.semibold, color: Colors.textInverse },
+  planCTA: {
+    marginHorizontal: 20, marginBottom: 16, backgroundColor: Colors.accent,
+    borderRadius: Radius.xl, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 14,
+  },
+  planCTATitle: { fontSize: FontSize.md, fontWeight: FontWeight.bold, color: Colors.textInverse },
+  planCTADesc: { fontSize: FontSize.xs, color: 'rgba(0,0,0,0.55)', marginTop: 3 },
   tipsCard: {
-    marginHorizontal: 20, marginTop: 10, backgroundColor: Colors.accentMuted,
+    marginHorizontal: 20, marginTop: 4, backgroundColor: Colors.accentMuted,
     borderRadius: Radius.xl, padding: 18, borderWidth: 1, borderColor: Colors.accent + '44',
   },
   tipsHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 },
