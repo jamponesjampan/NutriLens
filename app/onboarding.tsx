@@ -59,10 +59,37 @@ export default function OnboardingScreen() {
   };
 
   const toggleRestriction = (r: Restriction) => {
-    setRestrictions(prev =>
-      prev.includes(r) ? prev.filter(x => x !== r) : [...prev, r]
-    );
+    if (r === 'none') {
+      // Selecting "none" deselects everything else
+      setRestrictions(['none']);
+      return;
+    }
+    if (r === 'gluten') {
+      // Selecting gluten deselects none and other incompatibles
+      setRestrictions(prev => {
+        const without = prev.filter(x => x !== 'none');
+        return without.includes(r) ? without.filter(x => x !== r) : [...without, r];
+      });
+      return;
+    }
+    setRestrictions(prev => {
+      const without = prev.filter(x => x !== 'none');
+      return without.includes(r) ? without.filter(x => x !== r) : [...without, r];
+    });
   };
+
+  // IMC validation feedback
+  const getImcAlert = () => {
+    const w = parseFloat(weight);
+    const h = parseFloat(heightVal);
+    if (!w || !h || h < 50) return null;
+    const imc = w / Math.pow(h / 100, 2);
+    if (imc < 16 || imc > 40) {
+      return 'Sentimos que o teu corpo precisa de uma atenção especial agora. Vamos ajustar o teu plano para recuperares a tua força com saúde.';
+    }
+    return null;
+  };
+  const imcAlert = getImcAlert();
 
   const finish = () => {
     const ageN = parseInt(age) || 25;
@@ -249,6 +276,12 @@ export default function OnboardingScreen() {
                 <Text style={styles.quizTitle}>Criar a tua conta</Text>
                 <Text style={styles.quizSubtitle}>Os teus dados são usados apenas para personalizar a tua experiência nutricional.</Text>
               </View>
+              {imcAlert ? (
+                <View style={{ backgroundColor: 'rgba(245,158,11,0.12)', borderRadius: 12, padding: 14, marginBottom: 8, borderWidth: 1, borderColor: '#F59E0B44', flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+                  <Text style={{ fontSize: 20 }}>💚</Text>
+                  <Text style={{ flex: 1, fontSize: 13, color: '#8B949E', lineHeight: 20 }}>{imcAlert}</Text>
+                </View>
+              ) : null}
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Nome completo</Text>
                 <TextInput
@@ -259,6 +292,12 @@ export default function OnboardingScreen() {
                   placeholderTextColor={Colors.textMuted}
                 />
               </View>
+              {imcAlert ? (
+                <View style={{ backgroundColor: 'rgba(245,158,11,0.12)', borderRadius: 12, padding: 14, marginBottom: 8, borderWidth: 1, borderColor: '#F59E0B44', flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+                  <Text style={{ fontSize: 20 }}>💚</Text>
+                  <Text style={{ flex: 1, fontSize: 13, color: '#8B949E', lineHeight: 20 }}>{imcAlert}</Text>
+                </View>
+              ) : null}
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>E-mail</Text>
                 <TextInput
@@ -271,6 +310,12 @@ export default function OnboardingScreen() {
                   autoCapitalize="none"
                 />
               </View>
+              {imcAlert ? (
+                <View style={{ backgroundColor: 'rgba(245,158,11,0.12)', borderRadius: 12, padding: 14, marginBottom: 8, borderWidth: 1, borderColor: '#F59E0B44', flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+                  <Text style={{ fontSize: 20 }}>💚</Text>
+                  <Text style={{ flex: 1, fontSize: 13, color: '#8B949E', lineHeight: 20 }}>{imcAlert}</Text>
+                </View>
+              ) : null}
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Senha</Text>
                 <TextInput
@@ -292,6 +337,12 @@ export default function OnboardingScreen() {
                   <TextInput style={styles.input} value={weight} onChangeText={setWeight} placeholder="70" placeholderTextColor={Colors.textMuted} keyboardType="numeric" />
                 </View>
               </View>
+              {imcAlert ? (
+                <View style={{ backgroundColor: 'rgba(245,158,11,0.12)', borderRadius: 12, padding: 14, marginBottom: 8, borderWidth: 1, borderColor: '#F59E0B44', flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+                  <Text style={{ fontSize: 20 }}>💚</Text>
+                  <Text style={{ flex: 1, fontSize: 13, color: '#8B949E', lineHeight: 20 }}>{imcAlert}</Text>
+                </View>
+              ) : null}
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Altura (cm)</Text>
                 <TextInput style={styles.input} value={heightVal} onChangeText={setHeightVal} placeholder="170" placeholderTextColor={Colors.textMuted} keyboardType="numeric" />

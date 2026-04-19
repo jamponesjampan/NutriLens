@@ -15,13 +15,13 @@ export default function TabLayout() {
           backgroundColor: Colors.surface,
           borderTopColor: Colors.surfaceBorder,
           borderTopWidth: 1,
-          height: Platform.select({ ios: insets.bottom + 62, android: insets.bottom + 62, default: 70 }),
-          paddingTop: 8,
-          paddingBottom: Platform.select({ ios: insets.bottom + 8, android: insets.bottom + 8, default: 8 }),
+          height: Platform.select({ ios: insets.bottom + 60, android: insets.bottom + 60, default: 68 }),
+          paddingTop: 6,
+          paddingBottom: Platform.select({ ios: insets.bottom + 6, android: insets.bottom + 6, default: 6 }),
         },
         tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: Colors.textMuted,
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600', marginTop: 2 },
+        tabBarLabelStyle: { fontSize: 10, fontWeight: '600', marginTop: 1 },
       }}
     >
       <Tabs.Screen
@@ -37,24 +37,17 @@ export default function TabLayout() {
           title: 'Escanear',
           tabBarIcon: ({ color, size }) => (
             <View style={{
-              width: 52, height: 52, borderRadius: 26,
+              width: 50, height: 50, borderRadius: 25,
               backgroundColor: Colors.primary,
               alignItems: 'center', justifyContent: 'center',
-              marginTop: -18, shadowColor: Colors.primary,
+              marginTop: -16, shadowColor: Colors.primary,
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.5, shadowRadius: 8, elevation: 8,
             }}>
-              <MaterialIcons name="camera-alt" size={26} color={Colors.textInverse} />
+              <MaterialIcons name="camera-alt" size={24} color={Colors.textInverse} />
             </View>
           ),
           tabBarLabel: () => null,
-        }}
-      />
-      <Tabs.Screen
-        name="history"
-        options={{
-          title: 'Histórico',
-          tabBarIcon: ({ color, size }) => <MaterialIcons name="history" size={size} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -65,12 +58,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="community"
+        options={{
+          title: 'Nossa Terra',
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="people" size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Perfil',
           tabBarIcon: ({ color, size }) => <MaterialIcons name="person" size={size} color={color} />,
         }}
       />
+      <Tabs.Screen name="history" options={{ href: null }} />
     </Tabs>
   );
 }

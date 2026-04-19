@@ -18,6 +18,20 @@ export interface UserProfile {
   avatar?: string;
 }
 
+export interface FamilyMember {
+  id: string;
+  name: string;
+  profileType: ProfileType;
+  emoji: string;
+  color: string;
+  goal: UserGoal;
+  restrictions: Restriction[];
+  dailyCalorieTarget: number;
+  age?: number;
+  weight?: number;
+  height?: number;
+}
+
 export interface NutrientInfo {
   calories: number;
   protein: number;
@@ -81,6 +95,29 @@ export interface Challenge {
   totalDays: number;
 }
 
+export interface CommunityPost {
+  id: string;
+  authorName: string;
+  authorEmoji: string;
+  authorLocation: string;
+  imageUri: string;
+  dishName: string;
+  caption: string;
+  likes: number;
+  comments: number;
+  timeAgo: string;
+  tags: string[];
+  liked: boolean;
+}
+
+export interface ChatMessage {
+  id: string;
+  sender: 'user' | 'specialist';
+  text: string;
+  timestamp: number;
+  type: 'text' | 'tip' | 'alert';
+}
+
 export const DAILY_TIPS = [
   'Sabias que comer uma laranja depois do almoço ajuda o corpo a absorver o ferro do feijão? Combate a anemia!',
   'O funge de milho é rico em energia! Combina muito bem com vegetais verdes para equilibrar os nutrientes.',
@@ -89,6 +126,9 @@ export const DAILY_TIPS = [
   'As folhas de mandioca (saka-saka) são riquíssimas em ferro e cálcio. Um superfood angolano!',
   'Comer devagar e mastigar bem os alimentos melhora a digestão e dá sensação de saciedade mais cedo.',
   'O amendoim é rico em gorduras saudáveis e proteínas. Um punhado por dia faz bem ao coração!',
+  'Incluir quiabo nas refeições ajuda a controlar o açúcar no sangue — excelente para quem tem diabetes.',
+  'O mel angolano puro tem propriedades anti-inflamatórias naturais. Usa-o em vez do açúcar refinado!',
+  'A banana da terra cozida é uma excelente fonte de energia lenta — perfeita para o almoço e jantar.',
 ];
 
 export const MOCK_CHALLENGES: Challenge[] = [
@@ -138,11 +178,93 @@ export const MOCK_CHALLENGES: Challenge[] = [
   },
 ];
 
+export const MOCK_COMMUNITY_POSTS: CommunityPost[] = [
+  {
+    id: 'p1',
+    authorName: 'Maria Domingos',
+    authorEmoji: '👩🏾',
+    authorLocation: 'Luanda',
+    imageUri: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600',
+    dishName: 'Mufete da minha mãe',
+    caption: 'Troquei o sal refinado pelo sal marinho e adicionei mais limão. O peixe ficou mais leve e sinto-me com muito mais energia depois do almoço! 💚',
+    likes: 142,
+    comments: 23,
+    timeAgo: '2h atrás',
+    tags: ['Mufete', 'SaúdeAngolana', 'SemSal'],
+    liked: false,
+  },
+  {
+    id: 'p2',
+    authorName: 'João Mateus',
+    authorEmoji: '👨🏿',
+    authorLocation: 'Benguela',
+    imageUri: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=600',
+    dishName: 'Feijão com arroz integral',
+    caption: 'Mudei o arroz branco pelo integral há 3 semanas. Perdi 2kg sem fazer dieta e tenho muito menos fome ao longo do dia. Experimentem! 🙌',
+    likes: 98,
+    comments: 15,
+    timeAgo: '5h atrás',
+    tags: ['ArrozIntegral', 'PerdaPeso', 'DicaReal'],
+    liked: true,
+  },
+  {
+    id: 'p3',
+    authorName: 'Ana Carla',
+    authorEmoji: '👩🏽',
+    authorLocation: 'Huambo',
+    imageUri: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600',
+    dishName: 'Calulu de legumes',
+    caption: 'Versão vegetariana do Calulu com cogumelos no lugar do peixe seco. Ficou incrível! A nutricionista disse que está cheio de ferro e vitaminas. Recomendo! 🌿',
+    likes: 201,
+    comments: 41,
+    timeAgo: '1d atrás',
+    tags: ['Vegetariano', 'Calulu', 'Angola'],
+    liked: false,
+  },
+  {
+    id: 'p4',
+    authorName: 'Pai Zeco',
+    authorEmoji: '👴🏿',
+    authorLocation: 'Namibe',
+    imageUri: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600',
+    dishName: 'Sopa de legumes com osso',
+    caption: 'Com 68 anos e hipertensão, aprendi que a sopa de legumes caseira controla a pressão melhor que qualquer remédio. O app ajudou-me a descobrir isto! ❤️',
+    likes: 334,
+    comments: 67,
+    timeAgo: '2d atrás',
+    tags: ['Idosos', 'Hipertensão', 'Sopa', 'Cura'],
+    liked: false,
+  },
+  {
+    id: 'p5',
+    authorName: 'Celeste Neto',
+    authorEmoji: '👩🏾',
+    authorLocation: 'Cabinda',
+    imageUri: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600',
+    dishName: 'Papaia com mel e granola',
+    caption: 'Troquei o açúcar pelo mel angolano no meu pequeno-almoço. Sem açúcar há 1 semana e já perdi 800g! O desafio do NutriLens mudou a minha vida. 🍯',
+    likes: 176,
+    comments: 29,
+    timeAgo: '3d atrás',
+    tags: ['Mel', 'SemAcucar', 'Desafio7Dias'],
+    liked: false,
+  },
+];
+
+export const SPECIALIST_RESPONSES: string[] = [
+  'Olá! Sou a Dra. Fátima, nutricionista da nossa equipa. Em que posso ajudá-lo hoje? 😊',
+  'Excelente pergunta! Com base no que descreve, recomendamos incluir mais alimentos ricos em ferro como feijão, saka-saka e peixe. Isto é especialmente importante para o contexto angolano onde a anemia é frequente.',
+  'Compreendo a sua preocupação. Para o seu perfil, o ideal seria fazer 5 refeições pequenas ao longo do dia, evitando longos períodos sem comer. Quer que elaboremos um plano personalizado?',
+  'O seu IMC está dentro dos valores saudáveis. Continue com os hábitos actuais e foque-se em manter a hidratação — pelo menos 2L de água por dia é essencial, especialmente nas cidades mais quentes como Namibe e Malanje.',
+  'Para combater a anemia, a combinação de feijão com vitamina C (laranja, limão) aumenta a absorção de ferro em até 3 vezes. É uma dica simples que faz uma grande diferença!',
+  'A nossa equipa está sempre disponível para si. Partilhe uma foto do prato e fazemos a análise nutricional completa gratuitamente. É o nosso compromisso com a saúde da família angolana! 💚',
+];
+
 // Angolan food images via Unsplash
 export const MOCK_ANALYSES: FoodAnalysis[] = [
   {
     id: '1',
-    imageUri: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800', // grilled fish
+    imageUri: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800',
     dish: 'Mufete com Funge',
     cuisine: 'Angolana',
     ingredients: ['Peixe grelhado', 'Funge de milho', 'Feijão de óleo de palma', 'Banana da terra', 'Cebola', 'Alho'],
@@ -162,7 +284,7 @@ export const MOCK_ANALYSES: FoodAnalysis[] = [
   },
   {
     id: '2',
-    imageUri: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800', // rice and beans
+    imageUri: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800',
     dish: 'Arroz com Feijão e Frango',
     cuisine: 'Angolana',
     ingredients: ['Arroz', 'Feijão vermelho', 'Frango grelhado', 'Óleo de palma', 'Cebola', 'Alho', 'Tomate'],
