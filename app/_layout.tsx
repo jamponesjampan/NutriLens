@@ -17,6 +17,7 @@ export default function RootLayout() {
             <Stack.Screen name="analysis" options={{ animation: 'slide_from_bottom' }} />
             <Stack.Screen name="scan" options={{ animation: 'slide_from_bottom' }} />
             <Stack.Screen name="chat" options={{ animation: 'slide_from_bottom' }} />
+            <Stack.Screen name="admin" options={{ animation: 'fade' }} />
           </Stack>
         </AppProvider>
       </SafeAreaProvider>

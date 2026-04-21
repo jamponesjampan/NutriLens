@@ -5,19 +5,24 @@ import { useApp } from '@/contexts/AppContext';
 import { Colors } from '@/constants/theme';
 
 export default function IndexScreen() {
-  const { isOnboarded, isLoggedIn } = useApp();
+  const { isOnboarded, isLoggedIn, isLoading, isAdmin } = useApp();
   const router = useRouter();
 
   useEffect(() => {
+    if (isLoading) return;
+
     const timer = setTimeout(() => {
-      if (isOnboarded && isLoggedIn) {
+      if (isAdmin) {
+        router.replace('/admin' as any);
+      } else if (isLoggedIn && isOnboarded) {
         router.replace('/(tabs)');
       } else {
         router.replace('/onboarding');
       }
-    }, 500);
+    }, 300);
+
     return () => clearTimeout(timer);
-  }, [isOnboarded, isLoggedIn]);
+  }, [isLoading, isOnboarded, isLoggedIn, isAdmin]);
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background, justifyContent: 'center', alignItems: 'center' }}>
