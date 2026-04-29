@@ -1,26 +1,77 @@
-# Dependências (NUNCA suba isso, é o que trava o GitHub)
-node_modules/
-
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# Expo e arquivos de sistema
+
+
+# dependencies
+
+node_modules/
+
+
+
+# Expo
+
 .expo/
+
 dist/
+
 web-build/
 
-# Configurações locais e Segredos (MUITO importante)
-.env
-.env*.local
+expo-env.d.ts
+
+
+
+# Native
+
+.kotlin/
+
+*.orig.*
+
 *.jks
+
 *.p8
+
 *.p12
+
 *.key
 
-# Logs de erro (só servem para ocupar espaço)
+*.mobileprovision
+
+
+
+# Metro
+
+.metro-health-check*
+
+
+
+# debug
+
 npm-debug.*
+
 yarn-debug.*
+
 yarn-error.*
 
-# Outros
+
+
+# macOS
+
 .DS_Store
+
+*.pem
+
+
+
+# local env files
+
+.env*.local
+
+
+
+# typescript
+
 *.tsbuildinfo
+
+
+
+app-example
