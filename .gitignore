@@ -1,6 +1,8 @@
 # Dependências (NUNCA suba isso, é o que trava o GitHub)
 node_modules/
 
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
 # Expo e arquivos de sistema
 .expo/
 dist/
